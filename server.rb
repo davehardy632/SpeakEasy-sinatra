@@ -9,7 +9,6 @@ require './lib/message'
 require './lib/message_service'
 
 
-
 post "/" do
   @messages = MessageService.new
   {

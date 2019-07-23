@@ -16,13 +16,14 @@ class MessageService
     end
   end
 
+  def parsed_response(response)
+    JSON.parse(response.body, symbolize_names: true)
+  end
+
   def messages
     parsed_response(conn.get("/api/v1/messages"))
   end
 
-  def parsed_response(response)
-    JSON.parse(response.body, symbolize_names: true)
-  end
 
   def aggregate_messages
     messages[:data].map do |message_data|
@@ -37,7 +38,7 @@ class MessageService
 
   def first_message
     aggregate_messages
-    "First commit message, with a status of #{aggregate_messages.first.build_status} from #{aggregate_messages.first.creator}, it reads, #{aggregate_messages.first.commit_message}"
+    "Last commit message, with a status of #{aggregate_messages.last.build_status} from #{aggregate_messages.last.creator}, it reads, #{aggregate_messages.last.commit_message}"
   end
 
 end
