@@ -14,16 +14,4 @@ require './responses/launch_response'
 post "/" do
 launch_response = RequestRouter.new(JSON.parse(request.body.read))
 launch_response.format_response
-  # LaunchRequestHandler.new()
-  # {
-  #   version: "1.0",
-  #   response: {
-  #     outputSpeech: {
-  #       type: "PlainText",
-  #       text: "#{@messages.count_messages}, #{@messages.first_message}"
-  #     }
-  #   }
-  # }.to_json
 end
-
-# other speech types "ssml"

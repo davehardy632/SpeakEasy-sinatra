@@ -12,7 +12,7 @@ require './services/message_service'
 class MessageService
 
   def conn
-    Faraday.new(url: 'http://localhost:3000') do |f|
+    Faraday.new(url: 'https://arrogant-loon-34609.herokuapp.com') do |f|
       f.adapter Faraday.default_adapter
     end
   end
