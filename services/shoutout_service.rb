@@ -41,4 +41,19 @@ class ShoutoutService
     aggregate_shoutouts
     "Shoutout from #{aggregate_shoutouts.first.sender} to #{aggregate_shoutouts.first.sent_to}, #{aggregate_shoutouts.first.message}"
   end
+
+  def format_shoutouts_by_user(user)
+    parsed_response(conn.get("/api/v1/shoutouts/find?#{user}"))[:data].map do |shoutout|
+      Shoutout.new(shoutout)
+    end
+  end
+
+  def formatted_shoutouts(user)
+    shoutouts = format_shoutouts_by_user(user)
+    string = "Shoutout count of #{shoutouts.count}, from #{user}, reading, "
+    shoutouts.each do |shoutout|
+      string << "#{shoutout.text}"
+    end
+    string
+  end
 end

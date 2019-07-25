@@ -22,20 +22,19 @@ class IntentRequestHandler
   end
 
   def route_intents
+    message_service = MessageService.new
+    message_formatter = MessageFormatter.new
     if find_intent == "workflow_message_count"
-      message_service = MessageService.new
-      message_formatter = MessageFormatter.new
       message_formatter.format_messages(message_service.count_messages)
     elsif find_intent == "newest_workflow_message"
-      message_service = MessageService.new
-      message_formatter = MessageFormatter.new
       message_formatter.format_messages(message_service.last_message)
-    elsif find_intent = "messages_by_creator"
-      message_service = MessageService.new
-      message_formatter = MessageFormatter.new
+    elsif find_intent == "messages_by_creator"
       creator = json_response["request"]["intent"]["slots"]["name"]["value"]
-      message_service.format_messages_by_creator(creator)
       message_formatter.format_messages(message_service.format_messages_by_creator(creator))
+    elsif find_intent == "shoutouts_by_user_name"
+      shoutout_service = ShoutoutService.new
+      user = json_response["request"]["intent"]["slots"]["user_name"]["value"]
+      message_formatter.format_messages(shoutout_service.formatted_shoutouts(user))
     end
   end
 
