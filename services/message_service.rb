@@ -6,6 +6,7 @@ require 'json'
 require 'faraday'
 require 'pry'
 require './lib/message'
+require './services/message_service'
 
 
 class MessageService
@@ -24,6 +25,24 @@ class MessageService
     parsed_response(conn.get("/api/v1/messages"))
   end
 
+  def messages_by_creator(creator)
+    aggregate_messages_by_creator(creator)[:data].map do |message_data|
+      Message.new(message_data)
+    end
+  end
+
+  def format_messages_by_creator(creator)
+    messages = messages_by_creator(creator)
+    string = "There are #{messages.count} messages by #{messages.first.creator}, messages read, "
+    messages.each do |message|
+      string << "#{message.commit_message}, with a build status of #{message.build_state}.  "
+    end
+    string
+  end
+
+  def aggregate_messages_by_creator(creator)
+    parsed_response(conn.get("/api/v1/messages/find?#{creator}"))
+  end
 
   def aggregate_messages
     messages[:data].map do |message_data|
@@ -36,7 +55,7 @@ class MessageService
     "You have #{aggregate_messages.count} new build message updates"
   end
 
-  def first_message
+  def last_message
     aggregate_messages
     "Last commit message, with a status of #{aggregate_messages.last.build_status} from #{aggregate_messages.last.creator}, it reads, #{aggregate_messages.last.commit_message}"
   end
