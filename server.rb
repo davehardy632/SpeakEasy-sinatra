@@ -4,7 +4,7 @@ Bundler.setup
 require 'sinatra'
 require 'json'
 require 'faraday'
-require 'pry'
+
 require './lib/message'
 require './services/message_service'
 require './services/shoutout_service'
